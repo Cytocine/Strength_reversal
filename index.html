@@ -34,12 +34,14 @@
       --color-accent: #0ea5e9;
       --color-avwap: #eab308;
       --color-amber: #f59e0b;
+      --header-h: calc(52px + env(safe-area-inset-top, 0px));
     }
 
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
+      -webkit-tap-highlight-color: transparent;
     }
 
     body {
@@ -47,7 +49,9 @@
       color: var(--text-main);
       font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
       height: 100vh;
+      height: 100dvh;
       width: 100vw;
+      width: 100%;
       overflow: hidden;
       display: flex;
       flex-direction: column;
@@ -58,9 +62,6 @@
     .font-mono {
       font-family: 'JetBrains Mono', monospace;
     }
-
-    /* Top navigation header */
-    :root { --header-h: calc(52px + env(safe-area-inset-top, 0px)); }
 
     header {
       height: var(--header-h);
@@ -160,26 +161,6 @@
       color: var(--text-main);
     }
 
-    .custom-symbol-box {
-      display: flex;
-      align-items: center;
-      background: var(--bg-dark);
-      border: 1px solid var(--border-color);
-      border-radius: 6px;
-      padding: 2px 8px;
-    }
-
-    .custom-symbol-box input {
-      width: 75px;
-      background: transparent;
-      border: none;
-      color: #fff;
-      font-size: 12px;
-      font-weight: 700;
-      text-transform: uppercase;
-      outline: none;
-    }
-
     .tf-pill {
       font-size: 10px;
       font-weight: 700;
@@ -190,7 +171,6 @@
       color: #38bdf8;
     }
 
-    /* Info Bar */
     .ticker-bar {
       display: flex;
       align-items: center;
@@ -407,7 +387,7 @@
       margin-top: 6px;
     }
 
-    /* ---------- Watchlist Panel ---------- */
+    /* Watchlist */
     .icon-btn {
       width: 30px;
       height: 30px;
@@ -475,6 +455,8 @@
       flex: 1;
       min-height: 0;
       overflow-y: auto;
+      padding-bottom: env(safe-area-inset-bottom);
+      -webkit-overflow-scrolling: touch;
     }
 
     .watchlist-row {
@@ -569,12 +551,13 @@
         top: var(--header-h);
         left: 0;
         bottom: 0;
-        width: 82%;
-        max-width: 300px;
+        width: 88%;
+        max-width: 360px;
         z-index: 60;
         transform: translateX(-101%);
         transition: transform 0.22s ease;
         box-shadow: 4px 0 28px rgba(0, 0, 0, 0.55);
+        padding-bottom: env(safe-area-inset-bottom);
       }
 
       body.watchlist-open .watchlist-panel { transform: translateX(0); }
@@ -592,16 +575,24 @@
 
       body.watchlist-open .watchlist-backdrop { opacity: 1; pointer-events: auto; }
 
-      .watchlist-remove-btn { opacity: 1; }
-      .watchlist-play-btn { width: 32px; height: 32px; }
+      .watchlist-row { min-height: 56px; padding: 10px 12px; }
+      .watchlist-play-btn { width: 38px; height: 38px; }
+      .watchlist-symbol { font-size: 14px; }
+      .watchlist-row-top, .watchlist-row-bottom { font-size: 12px; }
+      .watchlist-add input, .watchlist-controls select { font-size: 16px; min-height: 38px; }
+      .watchlist-add .btn, .watchlist-controls .btn { min-height: 38px; }
+      .icon-btn { width: 38px; height: 38px; }
+      .panel-tab { padding: 14px 6px; font-size: 12px; }
+      .watchlist-remove-btn { width: 32px; height: 32px; font-size: 20px; opacity: 1; }
     }
 
     @media (max-width: 768px) {
-      .ticker-bar { display: none; }
+      .ticker-bar { display: flex; gap: 8px; font-size: 11px; }
+      .ticker-bar .ticker-item:not(:first-child) { display: none; }
+      .ticker-label { display: none; }
       header { padding-left: max(8px, env(safe-area-inset-left, 0px)); padding-right: max(8px, env(safe-area-inset-right, 0px)); gap: 4px; }
       .header-left { gap: 8px; }
       .header-right { gap: 6px; }
-      .logo-title { font-size: 12px; }
       .btn span { display: none; }
       .btn { padding: 8px; min-height: 36px; }
       #alpacaBtnText { display: none; }
@@ -609,11 +600,11 @@
     }
 
     @media (max-width: 480px) {
-      .tf-pill { display: none; }
+      .tf-pill { display: inline-flex; }
+      .logo-title { display: none; }
       .modal-box { width: 92vw; max-height: 86vh; overflow-y: auto; padding: 16px; }
     }
 
-    /* ---------- Scanner + tabs + extra mobile polish ---------- */
     .panel-view { display: flex; flex-direction: column; flex: 1; min-height: 0; }
     .hidden { display: none !important; }
     .panel-tabs { display: flex; border-bottom: 1px solid var(--border-color); flex-shrink: 0; }
@@ -635,28 +626,6 @@
     .hit-badge.bull { color: var(--color-bullish); background: rgba(16, 185, 129, 0.14); }
     .hit-badge.bear { color: var(--color-bearish); background: rgba(244, 63, 94, 0.14); }
     .hit-tags { font-size: 10px; color: var(--text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .watchlist-list { padding-bottom: env(safe-area-inset-bottom); -webkit-overflow-scrolling: touch; }
-
-    body { height: 100dvh; width: 100%; }
-
-    @media (max-width: 900px) {
-      .watchlist-panel { width: 88%; max-width: 360px; padding-bottom: env(safe-area-inset-bottom); }
-      .watchlist-row { min-height: 56px; padding: 10px 12px; }
-      .watchlist-play-btn { width: 38px; height: 38px; }
-      .watchlist-symbol { font-size: 14px; }
-      .watchlist-row-top, .watchlist-row-bottom { font-size: 12px; }
-      .watchlist-add input, .watchlist-controls select { font-size: 16px; min-height: 38px; }
-      .watchlist-add .btn, .watchlist-controls .btn { min-height: 38px; }
-      .icon-btn { width: 38px; height: 38px; }
-      .panel-tab { padding: 14px 6px; font-size: 12px; }
-      .watchlist-remove-btn { width: 32px; height: 32px; font-size: 20px; }
-    }
-
-    @media (max-width: 768px) {
-      .ticker-bar { display: flex; gap: 8px; font-size: 11px; }
-      .ticker-bar .ticker-item:not(:first-child) { display: none; }
-      .ticker-label { display: none; }
-    }
 
     .draw-toolbar {
       position: absolute; top: 8px; left: 68px; z-index: 20;
@@ -693,12 +662,6 @@
       .hp-btn { width: 38px; height: 38px; }
       .hp-main { width: 42px; height: 42px; }
       .hit-player { bottom: 44px; }
-    }
-    * { -webkit-tap-highlight-color: transparent; }
-
-    @media (max-width: 480px) {
-      .tf-pill { display: inline-flex; }
-      .logo-title { display: none; }
     }
   </style>
 </head>
@@ -807,28 +770,28 @@
       </div>
 
       <div id="watchlistView" class="panel-view">
-      <div class="watchlist-controls font-mono">
-        <div class="select-wrapper">
-          <select id="watchlistSortSelect">
-            <option value="rs" selected>Sort: Rel. Strength</option>
-            <option value="changePct">Sort: % Change</option>
-            <option value="symbol">Sort: Symbol</option>
-          </select>
+        <div class="watchlist-controls font-mono">
+          <div class="select-wrapper">
+            <select id="watchlistSortSelect">
+              <option value="rs" selected>Sort: Rel. Strength</option>
+              <option value="changePct">Sort: % Change</option>
+              <option value="symbol">Sort: Symbol</option>
+            </select>
+          </div>
+          <button id="watchlistSortDirBtn" class="btn icon-btn" title="Toggle sort direction" aria-label="Toggle sort direction">
+            <svg id="sortDirIcon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="19" x2="12" y2="5"></line>
+              <polyline points="5 12 12 5 19 12"></polyline>
+            </svg>
+          </button>
         </div>
-        <button id="watchlistSortDirBtn" class="btn icon-btn" title="Toggle sort direction" aria-label="Toggle sort direction">
-          <svg id="sortDirIcon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="12" y1="19" x2="12" y2="5"></line>
-            <polyline points="5 12 12 5 19 12"></polyline>
-          </svg>
-        </button>
-      </div>
 
-      <div class="watchlist-add font-mono">
-        <input type="text" id="watchlistAddInput" placeholder="ADD TICKER" maxlength="6">
-        <button id="watchlistAddBtn" class="btn" style="padding: 6px 10px;">Add</button>
-      </div>
+        <div class="watchlist-add font-mono">
+          <input type="text" id="watchlistAddInput" placeholder="ADD TICKER" maxlength="6">
+          <button id="watchlistAddBtn" class="btn" style="padding: 6px 10px;">Add</button>
+        </div>
 
-      <div class="watchlist-list font-mono" id="watchlistList"></div>
+        <div class="watchlist-list font-mono" id="watchlistList"></div>
       </div>
 
       <div id="scannerView" class="panel-view hidden">
@@ -847,34 +810,34 @@
       </div>
     </aside>
 
-  <!-- Full-Screen Main Chart Area -->
-  <main>
-    <div id="chart-container"></div>
-    <div class="draw-toolbar" id="drawToolbar">
-      <button class="dt-btn active" data-tool="cursor" title="Cursor" aria-label="Cursor"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M5 3l14 8-6 2-3 6z"></path></svg></button>
-      <button class="dt-btn" data-tool="hline" title="Horizontal line (price level)" aria-label="Horizontal line"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="12" x2="21" y2="12" stroke-dasharray="3 3"></line><circle cx="12" cy="12" r="2" fill="currentColor"></circle></svg></button>
-      <button class="dt-btn" data-tool="trend" title="Trend line" aria-label="Trend line"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="19" x2="20" y2="5"></line><circle cx="4" cy="19" r="2" fill="currentColor"></circle><circle cx="20" cy="5" r="2" fill="currentColor"></circle></svg></button>
-      <button class="dt-btn" data-tool="rect" title="Price range box" aria-label="Rectangle"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="6" width="16" height="12" rx="1"></rect></svg></button>
-      <button class="dt-btn" data-tool="erase" title="Eraser (tap a drawing)" aria-label="Eraser"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20H9l-5-5a2 2 0 0 1 0-3l9-9a2 2 0 0 1 3 0l5 5a2 2 0 0 1 0 3L13 20"></path></svg></button>
-      <button class="dt-btn" id="drawClearBtn" title="Clear all drawings" aria-label="Clear all"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6l-1 14H6L5 6"></path><path d="M10 11v6M14 11v6"></path></svg></button>
-      <button class="dt-btn" id="autoFitBtn" title="Auto-fit price axis" aria-label="Auto-fit price axis"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="7 8 12 3 17 8"></polyline><polyline points="7 16 12 21 17 16"></polyline><line x1="12" y1="3" x2="12" y2="21"></line></svg></button>
-    </div>
-    <div class="hit-player font-mono" id="hitPlayer">
-      <button id="hitPrevBtn" class="hp-btn" title="Previous hit" aria-label="Previous hit"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="19 4 9 12 19 20"></polygon><rect x="5" y="4" width="3" height="16"></rect></svg></button>
-      <button id="hitPlayBtn" class="hp-btn hp-main" title="Play through scanner hits" aria-label="Play through scanner hits"></button>
-      <button id="hitNextBtn" class="hp-btn" title="Next hit" aria-label="Next hit"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 4 15 12 5 20"></polygon><rect x="16" y="4" width="3" height="16"></rect></svg></button>
-      <span class="hp-label" id="hitLabel">Scanner hits</span>
-    </div>
-    <div class="chart-watermark font-mono" id="watermarkText"><span class="wm-symbol">SPY</span><span class="wm-tf">30 MIN · 15D</span></div>
-
-    <!-- Loading status indicator -->
-    <div class="loading-overlay" id="loadingOverlay">
-      <div class="spinner"></div>
-      <div class="font-mono" style="font-size: 12px; color: var(--text-muted);" id="loadingStatusText">
-        Connecting to Alpaca stock feed...
+    <!-- Full-Screen Main Chart Area -->
+    <main>
+      <div id="chart-container"></div>
+      <div class="draw-toolbar" id="drawToolbar">
+        <button class="dt-btn active" data-tool="cursor" title="Cursor" aria-label="Cursor"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M5 3l14 8-6 2-3 6z"></path></svg></button>
+        <button class="dt-btn" data-tool="hline" title="Horizontal line (price level)" aria-label="Horizontal line"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="12" x2="21" y2="12" stroke-dasharray="3 3"></line><circle cx="12" cy="12" r="2" fill="currentColor"></circle></svg></button>
+        <button class="dt-btn" data-tool="trend" title="Trend line" aria-label="Trend line"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="19" x2="20" y2="5"></line><circle cx="4" cy="19" r="2" fill="currentColor"></circle><circle cx="20" cy="5" r="2" fill="currentColor"></circle></svg></button>
+        <button class="dt-btn" data-tool="rect" title="Price range box" aria-label="Rectangle"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="6" width="16" height="12" rx="1"></rect></svg></button>
+        <button class="dt-btn" data-tool="erase" title="Eraser (tap a drawing)" aria-label="Eraser"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20H9l-5-5a2 2 0 0 1 0-3l9-9a2 2 0 0 1 3 0l5 5a2 2 0 0 1 0 3L13 20"></path></svg></button>
+        <button class="dt-btn" id="drawClearBtn" title="Clear all drawings" aria-label="Clear all"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6l-1 14H6L5 6"></path><path d="M10 11v6M14 11v6"></path></svg></button>
+        <button class="dt-btn" id="autoFitBtn" title="Auto-fit price axis" aria-label="Auto-fit price axis"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="7 8 12 3 17 8"></polyline><polyline points="7 16 12 21 17 16"></polyline><line x1="12" y1="3" x2="12" y2="21"></line></svg></button>
       </div>
-    </div>
-  </main>
+      <div class="hit-player font-mono" id="hitPlayer">
+        <button id="hitPrevBtn" class="hp-btn" title="Previous hit" aria-label="Previous hit"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="19 4 9 12 19 20"></polygon><rect x="5" y="4" width="3" height="16"></rect></svg></button>
+        <button id="hitPlayBtn" class="hp-btn hp-main" title="Play through scanner hits" aria-label="Play through scanner hits"></button>
+        <button id="hitNextBtn" class="hp-btn" title="Next hit" aria-label="Next hit"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 4 15 12 5 20"></polygon><rect x="16" y="4" width="3" height="16"></rect></svg></button>
+        <span class="hp-label" id="hitLabel">Scanner hits</span>
+      </div>
+      <div class="chart-watermark font-mono" id="watermarkText"><span class="wm-symbol">SPY</span><span class="wm-tf">30 MIN · 15D</span></div>
+
+      <!-- Loading status indicator -->
+      <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+        <div class="font-mono" style="font-size: 12px; color: var(--text-muted);" id="loadingStatusText">
+          Connecting to Alpaca stock feed...
+        </div>
+      </div>
+    </main>
   </div>
 
   <div class="watchlist-backdrop" id="watchlistBackdrop"></div>
@@ -1014,10 +977,6 @@
       return analyzedBars;
     }
 
-    /**
-     * Alpaca v2 Stock Market Data API
-     * Endpoint: https://data.alpaca.markets/v2/stocks/bars
-     */
     async function fetchAlpacaStockCandles(symbol = 'SPY') {
       const keyId = localStorage.getItem('alpaca_stock_key_id');
       const secret = localStorage.getItem('alpaca_stock_secret_key');
@@ -1027,18 +986,13 @@
         throw new Error('Alpaca API credentials missing. Click "Alpaca API Keys" in the top right to configure.');
       }
 
-      // Fetch ~40 days so EMAs/AVWAP are warmed up; chart shows the last 15 days
       const start = new Date(Date.now() - 40 * 24 * 60 * 60 * 1000).toISOString();
       const baseUrl = `https://data.alpaca.markets/v2/stocks/bars?symbols=${encodeURIComponent(symbol)}&timeframe=30Min&start=${encodeURIComponent(start)}&limit=1000&adjustment=split&feed=${feed}`;
 
-      // Alpaca returns bars oldest-first and caps each page at `limit`.
-      // Without following next_page_token, a 90-day range can exceed 1000
-      // bars and the response silently truncates before reaching today.
-      // Paginate until there's no next_page_token (or a sane page cap).
       let bars = [];
       let pageToken = null;
       let pageCount = 0;
-      const MAX_PAGES = 10; // 10 * 1000 = up to 10k bars, plenty for 90 days of 30m data
+      const MAX_PAGES = 10;
 
       do {
         const url = pageToken ? `${baseUrl}&page_token=${encodeURIComponent(pageToken)}` : baseUrl;
@@ -1089,16 +1043,14 @@
     let currentCalculatedData = [];
     let activeSymbol = 'SPY';
     let pollInterval = null;
-
     let cloudCanvasEl = null;
 
-    // ---------- Watchlist / Relative Strength / Play-Pause state ----------
     const BENCHMARK_SYMBOL = 'SPY';
     const DEFAULT_WATCHLIST = ['SPY', 'QQQ', 'AAPL', 'NVDA', 'TSLA', 'MSFT', 'AMZN', 'META'];
     let watchlistSymbols = [];
-    let watchlistData = {}; // symbol -> { price, changePct, rs, error }
+    let watchlistData = {};
     let isPlaying = false;
-    let watchlistSortDir = -1; // -1 = strongest first
+    let watchlistSortDir = -1;
 
     const ICON_PLAY = '<svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>';
     const ICON_PAUSE = '<svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>';
@@ -1107,9 +1059,6 @@
       const container = document.getElementById('chart-container');
       container.innerHTML = '';
 
-      // Cloud layer sits behind the chart (which is transparent), so the
-      // fill_between ribbons render underneath the candles/lines, same as
-      // the Pine script's default plot order.
       cloudCanvasEl = document.createElement('canvas');
       cloudCanvasEl.style.position = 'absolute';
       cloudCanvasEl.style.top = '0';
@@ -1131,9 +1080,12 @@
       container.appendChild(drawCanvasEl);
       setupDrawingInteractions();
 
+      const initW = chartMount.clientWidth || window.innerWidth;
+      const initH = chartMount.clientHeight || (window.innerHeight - 52);
+
       chart = LightweightCharts.createChart(chartMount, {
-        width: chartMount.clientWidth,
-        height: chartMount.clientHeight,
+        width: initW,
+        height: initH,
         layout: {
           background: { color: 'rgba(0,0,0,0)' },
           textColor: '#8492a6',
@@ -1181,9 +1133,6 @@
         wickDownColor: '#f43f5e'
       });
 
-      // EMA34 / EMA50 — faint gray boundary lines for the lower cloud
-      // (Pine: color=color.gray, opacity=40 — a translucent guide line,
-      // the fill between them is the actual signal).
       ema34Series = chart.addLineSeries({
         color: 'rgba(148, 163, 184, 0.4)',
         lineWidth: 1,
@@ -1202,7 +1151,6 @@
         priceScaleId: 'left'
       });
 
-      // EMA12 — solid aqua line (Pine: color.aqua, opacity=100, width=1)
       ema12Series = chart.addLineSeries({
         color: '#22d3ee',
         lineWidth: 1,
@@ -1212,7 +1160,6 @@
         priceScaleId: 'left'
       });
 
-      // AVWAP — green/red by close vs avwap, width 3 (Pine: line_width=3)
       avwapSeries = chart.addLineSeries({
         color: '#eab308',
         lineWidth: 3,
@@ -1222,34 +1169,25 @@
         priceScaleId: 'left'
       });
 
-      // EMA20 and EMA200 are calculated (used for the stack badge / legend)
-      // but the Pine script never plots them, so they're not added as
-      // chart series here to match its appearance.
-      ema20Series = null;
-      ema200Series = null;
-
       chart.timeScale().subscribeVisibleLogicalRangeChange(() => { drawClouds(); drawDrawings(); });
       if (!syncLoopStarted) { syncLoopStarted = true; overlaySyncLoop(); }
 
-      window.addEventListener('resize', () => {
-        if (chart && chartMount) {
+      const resizeHandler = () => {
+        if (chart && chartMount && chartMount.clientWidth > 0 && chartMount.clientHeight > 0) {
           chart.applyOptions({ width: chartMount.clientWidth, height: chartMount.clientHeight });
           drawClouds();
+          drawDrawings();
         }
-      });
+      };
+
+      window.addEventListener('resize', resizeHandler);
+      window.addEventListener('orientationchange', () => setTimeout(resizeHandler, 200));
 
       if (window.ResizeObserver) {
-        new ResizeObserver(() => {
-          chart.applyOptions({ width: chartMount.clientWidth, height: chartMount.clientHeight });
-          drawClouds();
-        }).observe(chartMount);
+        new ResizeObserver(resizeHandler).observe(chartMount);
       }
     }
 
-    // Renders the two fill_between ribbons from the Pine script as a canvas
-    // overlay, since lightweight-charts has no native fill-between-two-lines
-    // series. Drawn behind the (transparent-background) chart so candles and
-    // lines paint on top, matching the script's default layering.
     function drawClouds() {
       if (!chart || !cloudCanvasEl || !candleSeries || currentCalculatedData.length < 2) return;
 
@@ -1268,8 +1206,6 @@
       ctx.clearRect(0, 0, width, height);
 
       const ts = chart.timeScale();
-      // Chart coordinates start at the plot area, which sits to the right of
-      // the left price axis — shift the canvas and clip to the plot area.
       const offX = chart.priceScale('left').width();
       const plotW = ts.width();
       const plotH = height - ts.height();
@@ -1310,20 +1246,16 @@
         }
       }
 
-      // Bottom cloud: EMA34 vs EMA50, green/red (Pine opacity 40)
       drawRibbon('ema34', 'ema50', (bar) =>
         bar.ema34 > bar.ema50 ? 'rgba(16, 185, 129, 0.4)' : 'rgba(244, 63, 94, 0.4)'
       );
 
-      // AVWAP vs EMA50 cloud, aqua/fuchsia (Pine opacity 10)
       drawRibbon('avwap', 'ema50', (bar) =>
         bar.close > bar.avwap ? 'rgba(34, 211, 238, 0.12)' : 'rgba(217, 70, 239, 0.12)'
       );
       ctx.restore();
     }
 
-    // Shades every other trading day with a faint tint so day boundaries
-    // are visible at a glance on the 30m chart.
     function drawDayBands(ctx, ts, width, height) {
       const data = currentCalculatedData;
       if (data.length < 2) return;
@@ -1341,7 +1273,7 @@
       }
 
       dayGroups.forEach((group, idx) => {
-        if (idx % 2 === 0) return; // shade only alternate days
+        if (idx % 2 === 0) return;
 
         let xStart;
         if (group.startIdx === 0) {
@@ -1388,8 +1320,6 @@
       }));
       candleSeries.setData(candles);
 
-      // Arrows where the scanner condition is met: cloud + AVWAP newly agree
-      // (both green = bullish arrow up, both red = bearish arrow down).
       const markers = [];
       for (let i = 1; i < analyzedData.length; i++) {
         const prev = trendState(analyzedData[i - 1]);
@@ -1416,8 +1346,6 @@
         color: d.close > d.avwap ? '#10b981' : '#f43f5e'
       })));
 
-      // New symbol -> re-enable price auto-scale and refit the view.
-      // Same-symbol refreshes keep whatever zoom/scale the user set.
       if (renderedSymbol !== activeSymbol) {
         renderedSymbol = activeSymbol;
         chart.priceScale('left').applyOptions({ autoScale: true });
@@ -1479,15 +1407,12 @@
       try {
         const requestedSymbol = activeSymbol;
         const rawBars = await fetchAlpacaStockCandles(requestedSymbol);
-        if (requestedSymbol !== activeSymbol) return; // user switched stocks mid-fetch
+        if (requestedSymbol !== activeSymbol) return;
         const analyzed = computePineIndicators(rawBars);
         const cutoff = analyzed[analyzed.length - 1].time - 15 * 24 * 60 * 60;
         renderChart(analyzed.filter(d => d.time >= cutoff));
         overlay.style.display = 'none';
 
-        // Keep the watchlist row's displayed price fresh using data we
-        // already fetched for the chart (RS itself is recalculated
-        // separately from daily bars).
         const last = analyzed[analyzed.length - 1];
         if (last) {
           watchlistData[activeSymbol] = Object.assign({}, watchlistData[activeSymbol], { price: last.close });
@@ -1505,7 +1430,6 @@
       }
     }
 
-    // ---------- Watchlist persistence ----------
     function loadWatchlistSymbols() {
       try {
         const saved = JSON.parse(localStorage.getItem('watchlist_symbols') || 'null');
@@ -1519,7 +1443,6 @@
       localStorage.setItem('watchlist_symbols', JSON.stringify(watchlistSymbols));
     }
 
-    // ---------- Relative Strength (vs SPY, ~1 month of daily bars) ----------
     async function fetchDailyCloses(symbol, days = 45) {
       const keyId = localStorage.getItem('alpaca_stock_key_id');
       const secret = localStorage.getItem('alpaca_stock_secret_key');
@@ -1583,7 +1506,6 @@
       renderWatchlist();
     }
 
-    // ---------- Play / Pause ----------
     function startPolling() {
       if (pollInterval) clearInterval(pollInterval);
       pollInterval = setInterval(() => { if (isPlaying) loadStockData(); }, 60000);
@@ -1634,7 +1556,6 @@
       renderWatchlist();
     }
 
-    // ---------- Rendering ----------
     function renderWatchlist() {
       renderWatchlistList();
       renderScanner();
@@ -1701,7 +1622,6 @@
       });
     }
 
-    // ---------- Drawing tools (with price levels) ----------
     let drawCanvasEl = null;
     let syncLoopStarted = false;
     let renderedSymbol = null;
@@ -1720,9 +1640,6 @@
       try { localStorage.setItem('drawings_v1', JSON.stringify(drawingsStore)); } catch (e) {}
     }
 
-    // Times are stored as timestamps (extrapolated past the last bar) so
-    // drawings survive data refreshes; converted to chart "logical" positions
-    // for rendering.
     function timeToLogical(t) {
       const d = currentCalculatedData, n = d.length;
       if (!n) return null;
@@ -1995,8 +1912,6 @@
       ctx.restore();
     }
 
-    // The chart has no event for vertical price-axis zoom/drag, so poll the
-    // scale each frame and redraw the overlays (clouds + drawings) on change.
     let lastSyncSig = '';
     function overlaySyncLoop() {
       if (chart && candleSeries && cloudCanvasEl && currentCalculatedData.length) {
@@ -2015,7 +1930,6 @@
       requestAnimationFrame(overlaySyncLoop);
     }
 
-    // ---------- Chart hit player (cycle through scanner hits) ----------
     let hitCycleTimer = null;
     let hitCycling = false;
     let scanDone = false;
@@ -2061,7 +1975,6 @@
       else label.textContent = `${n} hit${n > 1 ? 's' : ''}`;
     }
 
-    // ---------- Export chart as PNG ----------
     async function exportChartImage() {
       if (!chart || !currentCalculatedData.length) return;
       const container = document.getElementById('chart-container');
@@ -2074,7 +1987,6 @@
       ctx.fillStyle = '#0a0d14';
       ctx.fillRect(0, 0, out.width, out.height);
 
-      // Watermark (behind everything)
       ctx.save();
       ctx.scale(dpr, dpr);
       ctx.textAlign = 'center';
@@ -2086,7 +1998,6 @@
       ctx.fillText('30 MIN · 15D', w / 2, h / 2 + Math.min(w * 0.08, 80));
       ctx.restore();
 
-      // Layers in the same order as on screen: clouds/day bands, chart, drawings
       drawClouds();
       drawDrawings();
       ctx.drawImage(cloudCanvasEl, 0, 0, out.width, out.height);
@@ -2107,7 +2018,6 @@
       }
       ctx.drawImage(drawCanvasEl, 0, 0, out.width, out.height);
 
-      // Title strip
       const last = currentCalculatedData[currentCalculatedData.length - 1];
       const stamp = new Date(last.time * 1000).toLocaleString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
       ctx.save();
@@ -2126,7 +2036,6 @@
       out.toBlob(async (blob) => {
         if (!blob) return;
         const file = new File([blob], name, { type: 'image/png' });
-        // Phones: use the native share sheet (save to Photos, send, etc.) when available
         if (window.matchMedia('(pointer: coarse)').matches && navigator.canShare && navigator.canShare({ files: [file] })) {
           try { await navigator.share({ files: [file], title: name }); return; }
           catch (err) { if (err && err.name === 'AbortError') return; }
@@ -2142,7 +2051,6 @@
       }, 'image/png');
     }
 
-    // ---------- Trend-change scanner ----------
     let scanHits = [];
     let scanRunning = false;
 
@@ -2155,23 +2063,17 @@
       return 0;
     }
 
-    // Bullish = EMA34/50 cloud green (EMA34 > EMA50) AND close above AVWAP (green line).
-    // Bearish = cloud red AND close below AVWAP. Anything else is neutral.
-    // A hit = the market is in a bullish/bearish state NOW and entered it
-    // within the last N candles (i.e. both conditions finally agreed).
     function detectTrendChange(bars, lookback) {
       const n = bars.length;
       if (n < lookback + 2) return null;
 
       const stateAt = trendState;
-
       const cur = stateAt(bars[n - 1]);
       if (cur === null || cur === 0) return null;
 
-      // Walk back to the first bar of the current bullish/bearish run
       let start = n - 1;
       while (start > 0 && stateAt(bars[start - 1]) === cur) start--;
-      if (start === 0 || start < n - lookback) return null; // run began before the window
+      if (start === 0 || start < n - lookback) return null;
 
       const arrow = cur;
       return {
@@ -2276,7 +2178,6 @@
       document.getElementById('tabScanner').classList.toggle('active', isScanner);
     }
 
-    // ---------- Mobile drawer ----------
     function openWatchlistDrawer() { document.body.classList.add('watchlist-open'); }
     function closeWatchlistDrawer() {
       if (window.innerWidth <= 900) document.body.classList.remove('watchlist-open');
@@ -2285,12 +2186,9 @@
 
     function setupEvents() {
       document.getElementById('refreshBtn').addEventListener('click', loadStockData);
-
-      // ---------- Watchlist drawer (mobile) ----------
       document.getElementById('watchlistToggleBtn').addEventListener('click', toggleWatchlistDrawer);
       document.getElementById('watchlistBackdrop').addEventListener('click', closeWatchlistDrawer);
 
-      // ---------- Watchlist add-symbol ----------
       const addInput = document.getElementById('watchlistAddInput');
       const addBtn = document.getElementById('watchlistAddBtn');
       addBtn.addEventListener('click', () => {
@@ -2301,7 +2199,6 @@
         if (e.key === 'Enter') addBtn.click();
       });
 
-      // ---------- Watchlist sort controls ----------
       document.getElementById('watchlistSortSelect').addEventListener('change', renderWatchlist);
       document.getElementById('watchlistSortDirBtn').addEventListener('click', () => {
         watchlistSortDir *= -1;
@@ -2310,7 +2207,6 @@
         renderWatchlist();
       });
 
-      // ---------- Watchlist row clicks (play/pause + remove), delegated ----------
       const onRowClick = (e) => {
         stopHitCycle();
         const removeBtn = e.target.closest('.watchlist-remove-btn');
@@ -2330,12 +2226,10 @@
       document.getElementById('watchlistList').addEventListener('click', onRowClick);
       document.getElementById('scannerList').addEventListener('click', onRowClick);
 
-      // ---------- Panel tabs + scanner ----------
       document.getElementById('tabWatchlist').addEventListener('click', () => switchPanelTab('watchlist'));
       document.getElementById('tabScanner').addEventListener('click', () => switchPanelTab('scanner'));
       document.getElementById('scanRunBtn').addEventListener('click', runScan);
 
-      // Chart hit player + export
       document.getElementById('hitPlayBtn').addEventListener('click', () => { hitCycling ? stopHitCycle() : startHitCycle(); });
       document.getElementById('hitPrevBtn').addEventListener('click', () => { stopHitCycle(); goToHit(-1); });
       document.getElementById('hitNextBtn').addEventListener('click', () => { stopHitCycle(); goToHit(1); });
@@ -2344,14 +2238,12 @@
 
       document.getElementById('watchlistRefreshBtn').addEventListener('click', refreshRelativeStrength);
 
-      // Alpaca Credentials Modal & Browser Storage
       const modal = document.getElementById('alpacaModal');
       const alpacaBtnText = document.getElementById('alpacaBtnText');
       const keyInput = document.getElementById('alpacaKeyInput');
       const secretInput = document.getElementById('alpacaSecretInput');
       const feedSelect = document.getElementById('alpacaFeedSelect');
 
-      // Populate from localStorage if available
       const savedKey = localStorage.getItem('alpaca_stock_key_id');
       const savedSecret = localStorage.getItem('alpaca_stock_secret_key');
       const savedFeed = localStorage.getItem('alpaca_stock_feed');
@@ -2402,9 +2294,22 @@
         renderWatchlist();
       });
 
+      // Resume handler for PWA / background switching
+      document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible') {
+          if (chart) {
+            const chartMount = document.querySelector('#chart-container > div:nth-child(2)');
+            if (chartMount && chartMount.clientWidth > 0) {
+              chart.applyOptions({ width: chartMount.clientWidth, height: chartMount.clientHeight });
+            }
+          }
+          if (isPlaying) {
+            loadStockData();
+          }
+        }
+      });
     }
 
-    // ---------- PWA: service worker, install prompt, offline badge ----------
     let deferredInstallPrompt = null;
 
     function initPWA() {
@@ -2445,21 +2350,28 @@
       syncOnline();
     }
 
-    window.onload = function() {
+    window.addEventListener('DOMContentLoaded', function() {
       initPWA();
       initChart();
       loadWatchlistSymbols();
       renderWatchlist();
       setupEvents();
 
-      // Open credentials dialog if keys haven't been saved yet
-      if (!localStorage.getItem('alpaca_stock_key_id')) {
-        document.getElementById('alpacaModal').style.display = 'flex';
-      } else {
-        playSymbol(activeSymbol);
-        refreshRelativeStrength().finally(runScan);
-      }
-    };
+      // Ensure dimensions settle before initial auto-scale
+      requestAnimationFrame(() => {
+        const mount = document.querySelector('#chart-container > div:nth-child(2)');
+        if (chart && mount && mount.clientWidth > 0) {
+          chart.applyOptions({ width: mount.clientWidth, height: mount.clientHeight });
+        }
+
+        if (!localStorage.getItem('alpaca_stock_key_id')) {
+          document.getElementById('alpacaModal').style.display = 'flex';
+        } else {
+          playSymbol(activeSymbol);
+          refreshRelativeStrength().finally(runScan);
+        }
+      });
+    });
   </script>
 </body>
 </html>
