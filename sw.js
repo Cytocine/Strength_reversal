@@ -1,5 +1,10 @@
-/* Stock 30m Trend Terminal — service worker */
-const CACHE_VERSION = 'v2';
+/* Stock 30m Trend Terminal — service worker
+ * - App shell is precached so the app opens instantly and offline.
+ * - Same-origin files and fonts: stale-while-revalidate.
+ * - Alpaca market data is NEVER cached (always live network).
+ * Bump CACHE_VERSION whenever you deploy changed files.
+ */
+const CACHE_VERSION = 'v1';
 const CACHE_NAME = `trend-terminal-${CACHE_VERSION}`;
 
 const APP_SHELL = [
@@ -17,44 +22,28 @@ const APP_SHELL = [
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then(async (cache) => {
-      // Add files individually so a missing icon doesn't abort the entire install
-      await Promise.allSettled(
-        APP_SHELL.map((url) =>
-          cache.add(url).catch((err) => console.warn(`[SW] Could not precache: ${url}`, err))
-        )
-      );
-    }).then(() => self.skipWaiting())
+    caches.open(CACHE_NAME).then((cache) => cache.addAll(APP_SHELL)).then(() => self.skipWaiting())
   );
 });
 
 self.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches.keys().then((keys) =>
-      Promise.all(
-        keys
-          .filter((k) => k.startsWith('trend-terminal-') && k !== CACHE_NAME)
-          .map((k) => caches.delete(k))
-      )
-    ).then(() => self.clients.claim())
+    caches.keys()
+      .then((keys) => Promise.all(keys.filter((k) => k.startsWith('trend-terminal-') && k !== CACHE_NAME).map((k) => caches.delete(k))))
+      .then(() => self.clients.claim())
   );
 });
 
-function staleWhileRevalidate(request, fallbackKey) {
+function staleWhileRevalidate(request, cacheKey) {
   return caches.open(CACHE_NAME).then((cache) =>
-    cache.match(request).then((cached) => {
-      const network = fetch(request)
-        .then((response) => {
-          if (response && (response.ok || response.type === 'opaque')) {
-            cache.put(request, response.clone());
-          }
-          return response;
-        })
-        .catch(() => cached);
-
-      if (cached) return cached;
-      if (fallbackKey) return cache.match(fallbackKey).then((fb) => fb || network);
-      return network;
+    cache.match(cacheKey || request).then((cached) => {
+      const network = fetch(request).then((response) => {
+        if (response && (response.ok || response.type === 'opaque')) {
+          cache.put(cacheKey || request, response.clone());
+        }
+        return response;
+      }).catch(() => cached);
+      return cached || network;
     })
   );
 }
@@ -65,29 +54,20 @@ self.addEventListener('fetch', (event) => {
 
   const url = new URL(request.url);
 
-  // Live market data: strictly network, never cache
+  // Live market data: always go to the network, never cache.
   if (url.hostname.endsWith('alpaca.markets')) return;
 
-  // Handle navigation requests (standalone launch / reload)
-  if (request.mode === 'navigate') {
-    event.respondWith(
-      caches.match('./index.html').then((cachedIndex) => {
-        return (
-          cachedIndex ||
-          fetch(request).catch(() => caches.match('./') || caches.match('index.html'))
-        );
-      })
-    );
-    return;
-  }
-
-  // Same-origin static assets
   if (url.origin === self.location.origin) {
+    // Page loads: serve the cached shell (works offline), refresh in background.
+    if (request.mode === 'navigate') {
+      event.respondWith(staleWhileRevalidate(new Request('./index.html'), './index.html'));
+      return;
+    }
     event.respondWith(staleWhileRevalidate(request));
     return;
   }
 
-  // Google Fonts
+  // Google Fonts (stylesheet + font files)
   if (url.hostname === 'fonts.googleapis.com' || url.hostname === 'fonts.gstatic.com') {
     event.respondWith(staleWhileRevalidate(request));
   }
